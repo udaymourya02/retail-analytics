@@ -1,0 +1,124 @@
+version: 2
+
+sources:
+  - name: warehouse
+    database: "{{ env_var('GCP_PROJECT_ID', 'retailco-analytics') }}"
+    schema: warehouse
+    tables:
+      - name: fact_sales
+      - name: fact_inventory
+      - name: fact_marketing_spend
+      - name: dim_customer
+      - name: dim_product
+      - name: dim_store
+      - name: dim_date
+      - name: dim_campaign
+
+models:
+
+  - name: stg_sales
+    description: >
+      Staging model for sales transactions. One row per order line item.
+      Converts pence to GBP and calculates gross margin %.
+      Source: fact_sales (loaded by ETL pipeline from POS system).
+    columns:
+      - name: sale_key
+        description: Surrogate primary key for the sale line
+        tests:
+          - not_null
+          - unique
+      - name: order_id
+        description: Natural key from POS system
+        tests:
+          - not_null
+      - name: net_revenue_gbp
+        description: Revenue after discounts, excluding VAT, in GBP
+        tests:
+          - not_null
+      - name: units_sold
+        description: Quantity of product sold
+        tests:
+          - not_null
+      - name: is_returned
+        description: True if this line item was returned
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+
+  - name: stg_customers
+    description: >
+      Staging model for customer dimension. Filters to current SCD Type 2 records only.
+      PII is masked (email, full address not available in analytics layer).
+    columns:
+      - name: customer_key
+        description: Surrogate primary key
+        tests:
+          - not_null
+          - unique
+      - name: customer_id
+        description: Natural key from CRM
+        tests:
+          - not_null
+      - name: loyalty_tier
+        description: Customer loyalty programme tier
+        tests:
+          - accepted_values:
+              values: ['Bronze', 'Silver', 'Gold', 'Platinum']
+
+  - name: stg_products
+    description: >
+      Staging model for product dimension. Filters to current SCD Type 2 records.
+      Converts cost and RRP from pence to GBP.
+    columns:
+      - name: product_key
+        description: Surrogate primary key
+        tests:
+          - not_null
+          - unique
+      - name: product_id
+        description: SKU natural key
+        tests:
+          - not_null
+
+  - name: stg_stores
+    description: >
+      Staging model for store dimension. Includes physical stores and online channel.
+    columns:
+      - name: store_key
+        description: Surrogate primary key
+        tests:
+          - not_null
+          - unique
+      - name: store_type
+        description: Physical or Online
+        tests:
+          - accepted_values:
+              values: ['Physical', 'Online', 'App']
+
+  - name: stg_inventory
+    description: >
+      Daily inventory snapshot per SKU per store.
+      RAG status pre-calculated in ETL layer.
+    columns:
+      - name: inventory_key
+        description: Surrogate primary key
+        tests:
+          - not_null
+          - unique
+      - name: stock_status
+        description: RAG status based on stock vs reorder point
+        tests:
+          - accepted_values:
+              values: ['RED', 'AMBER', 'GREEN']
+
+  - name: stg_marketing_spend
+    description: >
+      Daily marketing spend and attributed performance per campaign.
+      Spend converted from pence to GBP.
+    columns:
+      - name: spend_key
+        description: Surrogate primary key
+        tests:
+          - not_null
+          - unique

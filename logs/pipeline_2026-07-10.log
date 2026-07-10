@@ -1,0 +1,150 @@
+2026-07-10 00:55:59 | INFO     | __main__:324 | [RFM] Starting RFM segmentation pipeline
+2026-07-10 00:55:59 | INFO     | __main__:90 | [RFM] Loading sample data from CSV files
+2026-07-10 00:56:00 | INFO     | __main__:123 | [RFM] Calculating RFM metrics
+2026-07-10 00:56:01 | INFO     | __main__:185 | [RFM] Complete — 5,000 customers scored
+2026-07-10 00:56:01 | INFO     | __main__:186 | [RFM] Segment distribution:
+rfm_segment
+Loyal Customers        950
+At Risk                861
+New Customers          679
+Champions              675
+Needs Attention        637
+Others                 492
+Potential Loyalists    409
+Lost                   297
+2026-07-10 00:56:01 | INFO     | __main__:328 | [RFM] Generating visualisations
+2026-07-10 00:56:01 | INFO     | __main__:227 | [RFM] Plot saved: analytics/segmentation/plots/rfm_segment_distribution.png
+2026-07-10 00:56:01 | INFO     | __main__:252 | [RFM] Heatmap saved: analytics/segmentation/plots/rfm_heatmap.png
+2026-07-10 00:56:02 | INFO     | __main__:289 | [RFM] Scatter plot saved: analytics/segmentation/plots/rfm_segment_scatter.png
+2026-07-10 00:56:02 | INFO     | __main__:299 | [RFM] Saved: data/processed/mart_customer_rfm.csv (5,000 rows)
+2026-07-10 00:56:02 | INFO     | __main__:313 | [RFM] Segment summary saved: data/processed/rfm_segment_summary.csv
+2026-07-10 00:56:02 | INFO     | __main__:334 | [RFM] Pipeline complete
+2026-07-10 02:11:52 | INFO     | __main__:89 | ============================================================
+2026-07-10 02:11:52 | INFO     | __main__:90 |   RETAILCO ETL PIPELINE STARTING
+2026-07-10 02:11:52 | INFO     | __main__:91 |   Run ID : 872f7da7-0abc-41cd-b2d4-2e3950739875
+2026-07-10 02:11:52 | INFO     | __main__:92 |   Started: 2026-07-10T01:11:52.970736
+2026-07-10 02:11:52 | INFO     | __main__:93 |   Mode   : SAMPLE DATA
+2026-07-10 02:11:52 | INFO     | __main__:94 | ============================================================
+2026-07-10 02:11:52 | INFO     | __main__:100 | [STAGE 1] Extract
+2026-07-10 02:11:52 | INFO     | __main__:57 | [MAIN] Loading sample data from data/raw/
+2026-07-10 02:11:53 | INFO     | __main__:74 |   ✓ customers.csv: 5,000 rows
+2026-07-10 02:11:53 | INFO     | __main__:74 |   ✓ products.csv: 500 rows
+2026-07-10 02:11:53 | INFO     | __main__:74 |   ✓ stores.csv: 52 rows
+2026-07-10 02:11:53 | INFO     | __main__:74 |   ✓ orders.csv: 150,000 rows
+2026-07-10 02:11:53 | INFO     | __main__:74 |   ✓ order_lines.csv: 261,864 rows
+2026-07-10 02:11:54 | INFO     | __main__:74 |   ✓ inventory.csv: 180,000 rows
+2026-07-10 02:11:54 | INFO     | __main__:74 |   ✓ marketing_spend.csv: 2,508 rows
+2026-07-10 02:11:54 | INFO     | __main__:120 | [STAGE 2] Validate
+2026-07-10 02:11:54 | INFO     | etl.transformers.validator:76 | [VALIDATE] Starting orders validation | 150,000 input records
+2026-07-10 02:11:54 | INFO     | etl.transformers.validator:128 | [VALIDATE] Orders complete | Clean: 150,000 | Quarantined: 0 | Rate: 0.0%
+2026-07-10 02:11:54 | INFO     | etl.transformers.validator:142 | [VALIDATE] Starting order_lines validation | 261,864 input records
+2026-07-10 02:11:55 | INFO     | etl.transformers.validator:181 | [VALIDATE] Order lines complete | Clean: 261,864 | Quarantined: 0
+2026-07-10 02:11:55 | INFO     | __main__:137 | [STAGE 3] Transform
+2026-07-10 02:11:55 | INFO     | etl.transformers.transform:29 | [TRANSFORM] Customers: 5,000 rows
+2026-07-10 02:11:55 | INFO     | etl.transformers.transform:57 | [TRANSFORM] Customers complete: 5,000 rows
+2026-07-10 02:11:55 | INFO     | etl.transformers.transform:63 | [TRANSFORM] Products: 500 rows
+2026-07-10 02:11:55 | INFO     | etl.transformers.transform:114 | [TRANSFORM] Building fact_sales from 261,864 order lines
+2026-07-10 02:11:59 | INFO     | etl.transformers.transform:163 | [TRANSFORM] fact_sales complete: 261,864 rows
+2026-07-10 02:11:59 | INFO     | etl.transformers.transform:169 | [TRANSFORM] Inventory: 180,000 rows
+2026-07-10 02:15:07 | INFO     | __main__:89 | ============================================================
+2026-07-10 02:15:07 | INFO     | __main__:90 |   RETAILCO ETL PIPELINE STARTING
+2026-07-10 02:15:07 | INFO     | __main__:91 |   Run ID : 8f04e047-d682-4de9-abe6-1d678b4fc9ce
+2026-07-10 02:15:07 | INFO     | __main__:92 |   Started: 2026-07-10T01:15:07.329695
+2026-07-10 02:15:07 | INFO     | __main__:93 |   Mode   : SAMPLE DATA
+2026-07-10 02:15:07 | INFO     | __main__:94 | ============================================================
+2026-07-10 02:15:07 | INFO     | __main__:100 | [STAGE 1] Extract
+2026-07-10 02:15:07 | INFO     | __main__:57 | [MAIN] Loading sample data from data/raw/
+2026-07-10 02:15:07 | INFO     | __main__:74 |   ✓ customers.csv: 5,000 rows
+2026-07-10 02:15:07 | INFO     | __main__:74 |   ✓ products.csv: 500 rows
+2026-07-10 02:15:07 | INFO     | __main__:74 |   ✓ stores.csv: 52 rows
+2026-07-10 02:15:07 | INFO     | __main__:74 |   ✓ orders.csv: 150,000 rows
+2026-07-10 02:15:08 | INFO     | __main__:74 |   ✓ order_lines.csv: 261,864 rows
+2026-07-10 02:15:08 | INFO     | __main__:74 |   ✓ inventory.csv: 180,000 rows
+2026-07-10 02:15:08 | INFO     | __main__:74 |   ✓ marketing_spend.csv: 2,508 rows
+2026-07-10 02:15:08 | INFO     | __main__:120 | [STAGE 2] Validate
+2026-07-10 02:15:08 | INFO     | etl.transformers.validator:76 | [VALIDATE] Starting orders validation | 150,000 input records
+2026-07-10 02:15:08 | INFO     | etl.transformers.validator:128 | [VALIDATE] Orders complete | Clean: 150,000 | Quarantined: 0 | Rate: 0.0%
+2026-07-10 02:15:08 | INFO     | etl.transformers.validator:142 | [VALIDATE] Starting order_lines validation | 261,864 input records
+2026-07-10 02:15:09 | INFO     | etl.transformers.validator:181 | [VALIDATE] Order lines complete | Clean: 261,864 | Quarantined: 0
+2026-07-10 02:15:09 | INFO     | __main__:137 | [STAGE 3] Transform
+2026-07-10 02:15:09 | INFO     | etl.transformers.transform:29 | [TRANSFORM] Customers: 5,000 rows
+2026-07-10 02:15:09 | INFO     | etl.transformers.transform:57 | [TRANSFORM] Customers complete: 5,000 rows
+2026-07-10 02:15:09 | INFO     | etl.transformers.transform:63 | [TRANSFORM] Products: 500 rows
+2026-07-10 02:15:09 | INFO     | etl.transformers.transform:114 | [TRANSFORM] Building fact_sales from 261,864 order lines
+2026-07-10 02:15:13 | INFO     | etl.transformers.transform:163 | [TRANSFORM] fact_sales complete: 261,864 rows
+2026-07-10 02:15:13 | INFO     | etl.transformers.transform:169 | [TRANSFORM] Inventory: 180,000 rows
+2026-07-10 02:15:15 | INFO     | __main__:149 | [STAGE 4] Load
+2026-07-10 02:17:40 | INFO     | __main__:89 | ============================================================
+2026-07-10 02:17:40 | INFO     | __main__:90 |   RETAILCO ETL PIPELINE STARTING
+2026-07-10 02:17:40 | INFO     | __main__:91 |   Run ID : e346df78-8977-427f-9db4-ce2bfbfcaca4
+2026-07-10 02:17:40 | INFO     | __main__:92 |   Started: 2026-07-10T01:17:40.223595
+2026-07-10 02:17:40 | INFO     | __main__:93 |   Mode   : SAMPLE DATA
+2026-07-10 02:17:40 | INFO     | __main__:94 | ============================================================
+2026-07-10 02:17:40 | INFO     | __main__:100 | [STAGE 1] Extract
+2026-07-10 02:17:40 | INFO     | __main__:57 | [MAIN] Loading sample data from data/raw/
+2026-07-10 02:17:40 | INFO     | __main__:74 |   ✓ customers.csv: 5,000 rows
+2026-07-10 02:17:40 | INFO     | __main__:74 |   ✓ products.csv: 500 rows
+2026-07-10 02:17:40 | INFO     | __main__:74 |   ✓ stores.csv: 52 rows
+2026-07-10 02:17:40 | INFO     | __main__:74 |   ✓ orders.csv: 150,000 rows
+2026-07-10 02:17:41 | INFO     | __main__:74 |   ✓ order_lines.csv: 261,864 rows
+2026-07-10 02:17:41 | INFO     | __main__:74 |   ✓ inventory.csv: 180,000 rows
+2026-07-10 02:17:41 | INFO     | __main__:74 |   ✓ marketing_spend.csv: 2,508 rows
+2026-07-10 02:17:41 | INFO     | __main__:120 | [STAGE 2] Validate
+2026-07-10 02:17:41 | INFO     | etl.transformers.validator:76 | [VALIDATE] Starting orders validation | 150,000 input records
+2026-07-10 02:17:41 | INFO     | etl.transformers.validator:128 | [VALIDATE] Orders complete | Clean: 150,000 | Quarantined: 0 | Rate: 0.0%
+2026-07-10 02:17:41 | INFO     | etl.transformers.validator:142 | [VALIDATE] Starting order_lines validation | 261,864 input records
+2026-07-10 02:17:42 | INFO     | etl.transformers.validator:181 | [VALIDATE] Order lines complete | Clean: 261,864 | Quarantined: 0
+2026-07-10 02:17:42 | INFO     | __main__:137 | [STAGE 3] Transform
+2026-07-10 02:17:42 | INFO     | etl.transformers.transform:29 | [TRANSFORM] Customers: 5,000 rows
+2026-07-10 02:17:42 | INFO     | etl.transformers.transform:57 | [TRANSFORM] Customers complete: 5,000 rows
+2026-07-10 02:17:42 | INFO     | etl.transformers.transform:63 | [TRANSFORM] Products: 500 rows
+2026-07-10 02:17:42 | INFO     | etl.transformers.transform:114 | [TRANSFORM] Building fact_sales from 261,864 order lines
+2026-07-10 02:17:47 | INFO     | etl.transformers.transform:163 | [TRANSFORM] fact_sales complete: 261,864 rows
+2026-07-10 02:17:47 | INFO     | etl.transformers.transform:169 | [TRANSFORM] Inventory: 180,000 rows
+2026-07-10 02:17:51 | INFO     | __main__:149 | [STAGE 4] Load
+2026-07-10 02:18:02 | INFO     | __main__:168 | [LOAD] Dev mode — outputs written to data/processed/
+2026-07-10 02:18:02 | INFO     | __main__:195 | ============================================================
+2026-07-10 02:18:02 | INFO     | __main__:196 |   PIPELINE COMPLETE
+2026-07-10 02:18:02 | INFO     | __main__:197 |   Duration : 22.1s
+2026-07-10 02:18:02 | INFO     | __main__:198 |   Orders   : 150,000 clean / 0 quarantined
+2026-07-10 02:18:02 | INFO     | __main__:199 |   Lines    : 261,864 clean / 0 quarantined
+2026-07-10 02:18:02 | INFO     | __main__:200 |   fact_sales rows : 261,864
+2026-07-10 02:18:02 | INFO     | __main__:201 | ============================================================
+2026-07-10 02:18:37 | INFO     | __main__:324 | [RFM] Starting RFM segmentation pipeline
+2026-07-10 02:18:37 | INFO     | __main__:90 | [RFM] Loading sample data from CSV files
+2026-07-10 02:18:39 | INFO     | __main__:123 | [RFM] Calculating RFM metrics
+2026-07-10 02:25:43 | INFO     | __main__:288 | [FORECAST] Starting demand forecasting pipeline
+2026-07-10 02:25:43 | INFO     | __main__:81 | [FORECAST] Loading sales data
+2026-07-10 02:28:46 | INFO     | __main__:291 | [RFM] Starting RFM segmentation pipeline
+2026-07-10 02:28:46 | INFO     | __main__:80 | [RFM] Loading sample data from raw CSV files
+2026-07-10 02:28:47 | INFO     | __main__:88 | [RFM] Loaded 261,864 order lines | 5,000 customers
+2026-07-10 02:28:47 | INFO     | __main__:95 | [RFM] Calculating RFM metrics
+2026-07-10 02:28:49 | INFO     | __main__:162 | [RFM] Complete — 5,000 customers scored
+2026-07-10 02:28:49 | INFO     | __main__:163 | [RFM] Segment distribution:
+rfm_segment
+Loyal Customers        950
+At Risk                861
+New Customers          679
+Champions              675
+Needs Attention        637
+Others                 492
+Potential Loyalists    409
+Lost                   297
+2026-07-10 02:28:49 | INFO     | __main__:295 | [RFM] Generating visualisations
+2026-07-10 02:28:51 | INFO     | __main__:203 | [RFM] Plot saved: analytics/segmentation/plots\rfm_segment_distribution.png
+2026-07-10 02:28:51 | INFO     | __main__:224 | [RFM] Heatmap saved: analytics/segmentation/plots\rfm_heatmap.png
+2026-07-10 02:28:52 | INFO     | __main__:258 | [RFM] Scatter plot saved: analytics/segmentation/plots\rfm_segment_scatter.png
+2026-07-10 02:28:52 | INFO     | __main__:266 | [RFM] Saved: data/processed\mart_customer_rfm.csv (5,000 rows)
+2026-07-10 02:28:52 | INFO     | __main__:279 | [RFM] Segment summary saved: data/processed\rfm_segment_summary.csv
+2026-07-10 02:28:52 | INFO     | __main__:301 | [RFM] Pipeline complete
+2026-07-10 02:30:18 | INFO     | __main__:288 | [FORECAST] Starting demand forecasting pipeline
+2026-07-10 02:30:18 | INFO     | __main__:81 | [FORECAST] Loading sales data
+2026-07-10 02:30:20 | INFO     | __main__:117 | [FORECAST] Loaded 790 week-category rows | 5 categories | 2021-12-27 → 2024-12-30
+2026-07-10 02:30:20 | INFO     | __main__:297 | [FORECAST] Modelling: Accessories
+2026-07-10 02:30:22 | INFO     | __main__:297 | [FORECAST] Modelling: Childrenswear
+2026-07-10 02:30:23 | INFO     | __main__:297 | [FORECAST] Modelling: Footwear
+2026-07-10 02:30:24 | INFO     | __main__:297 | [FORECAST] Modelling: Menswear
+2026-07-10 02:30:26 | INFO     | __main__:297 | [FORECAST] Modelling: Womenswear
+2026-07-10 02:30:28 | INFO     | __main__:317 | [FORECAST] Saved: data/processed\demand_forecast.csv (850 rows)
+2026-07-10 02:30:28 | INFO     | __main__:330 | [FORECAST] 0/5 categories within 15.0% MAPE target
+2026-07-10 02:30:28 | INFO     | __main__:331 | [FORECAST] Pipeline complete

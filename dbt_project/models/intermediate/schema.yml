@@ -1,0 +1,44 @@
+version: 2
+
+models:
+
+  - name: int_sales_enriched
+    description: >
+      Enriched sales fact — joins stg_sales with all dimension tables (customer, product,
+      store, date). This is the single source for all sales-based mart models.
+      One row per order line item with full dimensional context.
+    columns:
+      - name: sale_key
+        description: Primary key inherited from stg_sales
+        tests:
+          - not_null
+          - unique
+      - name: order_date
+        description: Date of the order (from dim_date)
+        tests:
+          - not_null
+      - name: net_revenue_gbp
+        description: Net revenue in GBP after discounts, excl. VAT
+        tests:
+          - not_null
+
+  - name: int_customer_orders
+    description: >
+      One row per customer aggregating their full order history.
+      Calculates the raw inputs for RFM scoring: days since last purchase,
+      purchase frequency, and total monetary value.
+      Filters out returned items from all value calculations.
+    columns:
+      - name: customer_id
+        description: Natural key — one row per customer
+        tests:
+          - not_null
+          - unique
+      - name: days_since_last_purchase
+        description: Calendar days between today and most recent purchase
+        tests:
+          - not_null
+      - name: total_revenue_gbp
+        description: Sum of net revenue across all non-returned orders
+        tests:
+          - not_null

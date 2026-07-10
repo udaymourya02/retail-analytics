@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.env
+venv/
+.venv/
+
+# Credentials — NEVER commit these
+service_account*.json
+credentials*.json
+*_key.json
+
+# Data files
+data/raw/*.csv
+data/processed/*.csv
+*.parquet
+
+# Jupyter
+.ipynb_checkpoints/
+
+# dbt
+dbt_project/target/
+dbt_project/logs/
+dbt_project/.user.yml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

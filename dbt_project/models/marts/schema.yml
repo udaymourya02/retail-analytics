@@ -1,0 +1,141 @@
+version: 2
+
+models:
+
+  - name: mart_customer_rfm
+    description: >
+      RFM (Recency, Frequency, Monetary) segmentation for every customer.
+      Scores customers 1–5 on each dimension using quintile ranking.
+      Assigns a named segment (Champions, Loyal, At Risk, Lost, etc.).
+      Refreshed weekly. Used by Customer Intelligence dashboard and CRM exports.
+    columns:
+      - name: customer_id
+        description: Natural key — one row per customer
+        tests:
+          - not_null
+          - unique
+      - name: r_score
+        description: Recency score 1-5. 5 = purchased most recently.
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+      - name: f_score
+        description: Frequency score 1-5. 5 = highest number of purchase dates.
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+      - name: m_score
+        description: Monetary score 1-5. 5 = highest total spend.
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+      - name: rfm_segment
+        description: Named customer segment based on RFM score rules.
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - 'Champions'
+                - 'Loyal Customers'
+                - 'Potential Loyalists'
+                - 'New Customers'
+                - 'Needs Attention'
+                - 'At Risk'
+                - 'Lost'
+                - 'Others'
+      - name: total_revenue_gbp
+        description: Total net revenue from this customer (excl. returns)
+        tests:
+          - not_null
+
+  - name: mart_executive_kpis
+    description: >
+      Daily KPI summary for executive dashboard.
+      One row per calendar date with WoW and YoY comparisons.
+      Powers: revenue chart, orders trend, AOV card, margin gauge.
+    columns:
+      - name: order_date
+        description: Calendar date — one row per day
+        tests:
+          - not_null
+          - unique
+      - name: revenue_gbp
+        description: Total net revenue in GBP
+        tests:
+          - not_null
+      - name: gross_margin_pct
+        description: Gross profit as a % of net revenue
+
+  - name: mart_store_performance
+    description: >
+      Monthly performance metrics per store.
+      One row per store per month. Includes regional grouping for heatmap.
+      Row-level security applied in Power BI so managers see only their store.
+    columns:
+      - name: store_id
+        description: Store natural key
+        tests:
+          - not_null
+      - name: order_month
+        description: Calendar month number (1–12)
+        tests:
+          - not_null
+      - name: revenue_gbp
+        description: Total net revenue for this store in this month
+        tests:
+          - not_null
+
+  - name: mart_product_performance
+    description: >
+      Weekly product performance metrics.
+      One row per product per week. Includes category rank for top-N analysis.
+    columns:
+      - name: product_id
+        description: SKU natural key
+        tests:
+          - not_null
+      - name: revenue_gbp
+        description: Total net revenue for this product this week
+        tests:
+          - not_null
+      - name: units_sold
+        description: Total units sold this week
+        tests:
+          - not_null
+
+  - name: mart_inventory_status
+    description: >
+      Current inventory status — most recent snapshot per product per store.
+      RAG status and reorder flags pre-calculated.
+      Powers daily stockout alert email and inventory dashboard.
+    columns:
+      - name: inventory_key
+        description: Primary key
+        tests:
+          - not_null
+          - unique
+      - name: stock_status
+        description: RAG status
+        tests:
+          - accepted_values:
+              values: ['RED', 'AMBER', 'GREEN']
+
+  - name: mart_marketing_attribution
+    description: >
+      Monthly marketing attribution by campaign and channel.
+      ROAS, CTR, cost per order, and revenue share pre-calculated.
+      Powers marketing attribution dashboard.
+    columns:
+      - name: campaign_id
+        description: Campaign natural key
+        tests:
+          - not_null
+      - name: roas
+        description: Return on Ad Spend (attributed revenue / spend)
+      - name: total_spend_gbp
+        description: Total marketing spend in GBP for this month
+        tests:
+          - not_null

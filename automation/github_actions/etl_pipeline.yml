@@ -1,0 +1,167 @@
+name: RetailCo ETL Pipeline
+
+on:
+  # Run daily at 01:00 UTC
+  schedule:
+    - cron: '0 1 * * *'
+
+  # Allow manual trigger from GitHub UI
+  workflow_dispatch:
+    inputs:
+      use_sample_data:
+        description: 'Use sample data instead of live APIs?'
+        required: true
+        default: 'false'
+        type: boolean
+
+  # Run CI checks on every pull request
+  pull_request:
+    branches: [main]
+    paths:
+      - 'etl/**'
+      - 'dbt_project/**'
+      - 'analytics/**'
+      - 'tests/**'
+
+jobs:
+  # ──────────────────────────────────────────────────────────────────────────
+  # JOB 1: Lint and unit tests (runs on every PR)
+  # ──────────────────────────────────────────────────────────────────────────
+  test:
+    name: Lint & Unit Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 etl/ analytics/ --max-line-length=110 --ignore=E203,W503
+
+      - name: Run unit tests
+        run: pytest tests/ -v --tb=short
+        env:
+          USE_SAMPLE_DATA: 'true'
+          SAMPLE_DATA_DIR: 'data/raw'
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # JOB 2: Generate sample data (only needed if raw files don't exist)
+  # ──────────────────────────────────────────────────────────────────────────
+  generate-data:
+    name: Generate Sample Data
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && inputs.use_sample_data == true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate data
+        run: python data/sample/generate_data.py
+
+      - name: Upload raw data as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw-data
+          path: data/raw/
+          retention-days: 1
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # JOB 3: Production ETL pipeline (runs on schedule or manual trigger)
+  # ──────────────────────────────────────────────────────────────────────────
+  etl:
+    name: Run ETL Pipeline
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    needs: []
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+      - name: Run ETL pipeline
+        run: python etl/main.py
+        env:
+          GCP_PROJECT_ID:    ${{ secrets.GCP_PROJECT_ID }}
+          GCP_DATASET:       warehouse
+          USE_SAMPLE_DATA:   ${{ github.event.inputs.use_sample_data || 'false' }}
+          POS_CLIENT_ID:     ${{ secrets.POS_CLIENT_ID }}
+          POS_CLIENT_SECRET: ${{ secrets.POS_CLIENT_SECRET }}
+          SF_INSTANCE_URL:   ${{ secrets.SF_INSTANCE_URL }}
+          SF_CLIENT_ID:      ${{ secrets.SF_CLIENT_ID }}
+          SF_CLIENT_SECRET:  ${{ secrets.SF_CLIENT_SECRET }}
+          SENDGRID_API_KEY:  ${{ secrets.SENDGRID_API_KEY }}
+          ALERT_EMAIL_TO:    ${{ secrets.ALERT_EMAIL_TO }}
+
+      - name: Run dbt models
+        run: |
+          cd dbt_project
+          dbt deps
+          dbt run --profiles-dir .
+          dbt test --profiles-dir .
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          DBT_PROFILES_DIR: .
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-logs
+          path: logs/
+          retention-days: 7
+
+      - name: Send failure alert
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.sendgrid.net
+          server_port: 587
+          username: apikey
+          password: ${{ secrets.SENDGRID_API_KEY }}
+          subject: "🚨 RetailCo ETL Pipeline FAILED — ${{ github.run_id }}"
+          to: ${{ secrets.ALERT_EMAIL_TO }}
+          from: pipeline-alerts@retailco.com
+          body: |
+            The RetailCo ETL pipeline failed.
+
+            Run ID    : ${{ github.run_id }}
+            Triggered : ${{ github.event_name }}
+            Time      : ${{ github.event.head_commit.timestamp }}
+
+            Check the Actions log for details:
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
