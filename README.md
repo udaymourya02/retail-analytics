@@ -158,7 +158,7 @@ cd dbt_project && dbt run && dbt test
 
 **Uday Mourya**  
 MSc Business Analytics — University of Warwick (2026)  
-[LinkedIn](https://linkedin.com/in/udaymourya) | [GitHub](https://github.com/udaymourya02)
+[LinkedIn](https://www.linkedin.com/in/uday-mourya-1b0062230/) | [GitHub](https://github.com/udaymourya02)
 
 ---
 *Built as a portfolio project demonstrating end-to-end analytics engineering and BI capabilities.*
